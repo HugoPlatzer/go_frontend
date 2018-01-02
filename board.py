@@ -26,23 +26,14 @@ class Board():
     
     currentPosition = self.positions[-1].position
     if currentPosition[point] == 0:
-      positionsBefore = [p.position for p in self.positions]
+      positionsBefore = set(str(p.position) for p in self.positions)
       positionAfter = self.playMovePosition(currentPosition, point, self.currentPlayer())
-      isLegal = (positionAfter not in positionsBefore)
+      isLegal = (str(positionAfter) not in positionsBefore)
     else:
       isLegal = False
 
     self.legalMoves[point] = isLegal
     return isLegal
-  
-  def legalMovesPosition(self, position, color, previousPositions):
-    moves = [i for i in range(self.size * self.size) if position[i] == 0]
-    legalMoves = []
-    for m in moves:
-      positionAfter = self.playMovePosition(position, m, color)
-      if str(positionAfter) not in previousPositions:
-        legalMoves.append(m)
-    return legalMoves
   
   def playMove(self, point):
     color = self.currentPlayer()
@@ -136,6 +127,6 @@ class Board():
 
   def pointToNotation(self, point):
     row, col = point // self.size, point % self.size
-    notationRow = self.size - 1 - row
-    rowStr = "ABCDEFGHJKLMNOPQRSTUVWXYZ"
-    return "{}{}".format(rowStr[notationRow], col + 1)
+    notationRow = self.size - row
+    colStr = "ABCDEFGHJKLMNOPQRSTUVWXYZ"
+    return "{}{}".format(colStr[col], notationRow)
